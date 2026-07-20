@@ -235,26 +235,21 @@ app.layout = html.Div([
 ])
 
 # Callback para atualizar os gráficos conforme os filtros
-@app.callback(
-    [   Output('grafico-produto', 'figure'),
-        Output('grafico-regiao', 'figure'),
-        Output('grafico-mensal', 'figure'),
-        Output('grafico-diario', 'figure'),
-        Output('grafico-dia-da-semana', 'figure'),
-        Output('grafico-outliers', 'figure'),
-        Output('grafico-distribuicao', 'figure'),
-        Output('grafico-media-desvio', 'figure'),
-        Output('grafico-acumulado', 'figure')
-    ],
-    [
-        Input('produto-dropdown', 'value'),
-        Input('regiao-dropdown', 'value'),
-        Input('ano-dropdown', 'value'),
-        Input('date-picker-range', 'start_date'),
-        Input('date-picker-range', 'end_date')
-    ],
-    prevent_initital_call=True
-)
+Output('grafico-produto', 'figure'),
+Output('grafico-regiao', 'figure'),
+Output('grafico-mensal', 'figure'),
+Output('grafico-diario', 'figure'),
+Output('grafico-dia-da-semana', 'figure'),
+Output('grafico-outliers', 'figure'),
+Output('grafico-distribuicao', 'figure'),
+Output('grafico-media-desvio', 'figure'),
+Output('grafico-acumulado', 'figure'),
+Input('produto-dropdown', 'value'),
+Input('regiao-dropdown', 'value'),
+Input('ano-dropdown', 'value'),
+Input('date-picker-range', 'start_date'),
+Input('date-picker-range', 'end_date')
+#prevent_initital_call=True
 
 def update_graph(produtos, regioes, ano, start_date, end_date):
     try:
