@@ -1,4 +1,6 @@
 import dash
+from dash import callback
+#from dash.exceptions import PreventUpdate
 from dash import dcc, html
 from dash.dependencies import Input, Output
 import pandas as pd
@@ -40,7 +42,7 @@ class AnalisadorDeVendas:
 
     def analise_vendas_por_regiao(self, regioes_filtrados):
         ''' Retorna o gráfico de vendas totais por região '''
-        df_regiao = self.dados[self.dados['regiao'].isin('regioes_filtradas')]
+        df_regiao = self.dados[self.dados['regiao'].isin(regioes_filtrados)]
         df_regiao = df_regiao.groupby('regiao')['valor'].sum().reset_index().sort_values(by='valor', ascending=False)
         fig = px.pie(df_regiao, names='regiao', values='valor', title='Vendas por Região', color='valor')
         return fig
@@ -233,21 +235,26 @@ app.layout = html.Div([
 ])
 
 # Callback para atualizar os gráficos conforme os filtros
-Output('grafico-produto', 'figure'),
-Output('grafico-regiao', 'figure'),
-Output('grafico-mensal', 'figure'),
-Output('grafico-diario', 'figure'),
-Output('grafico-dia-da-semana', 'figure'),
-Output('grafico-outliers', 'figure'),
-Output('grafico-distribuicao', 'figure'),
-Output('grafico-media-desvio', 'figure'),
-Output('grafico-acumulado', 'figure'),
-
-Input('produto-dropdown', 'value'),
-Input('regiao-dropdown', 'value'),
-Input('ano-dropdown', 'value'),
-Input('datepicker', 'start_date'),
-Input('datepicker', 'end_date')
+@app.callback(
+    [   Output('grafico-produto', 'figure'),
+        Output('grafico-regiao', 'figure'),
+        Output('grafico-mensal', 'figure'),
+        Output('grafico-diario', 'figure'),
+        Output('grafico-dia-da-semana', 'figure'),
+        Output('grafico-outliers', 'figure'),
+        Output('grafico-distribuicao', 'figure'),
+        Output('grafico-media-desvio', 'figure'),
+        Output('grafico-acumulado', 'figure')
+    ],
+    [
+        Input('produto-dropdown', 'value'),
+        Input('regiao-dropdown', 'value'),
+        Input('ano-dropdown', 'value'),
+        Input('date-picker-range', 'start_date'),
+        Input('date-picker-range', 'end_date')
+    ],
+    prevent_initital_call=True
+)
 
 def update_graph(produtos, regioes, ano, start_date, end_date):
     try:
@@ -273,8 +280,8 @@ def update_graph(produtos, regioes, ano, start_date, end_date):
 
     except Exception as e:
         # caso ocorra algum erro, logar mensagem de erro e retornar gráficos vazios
-        print(f"Erro ao atualizar os gráficos: {e}")
-        return go.Figure(fig_produto), go.Figure(), go.Figure(), go.Figure(), go.Figure(), go.Figure(), go.Figure(), go.Figure(), go.Figure()
+        print(f'Erro ao atualizar os gráficos: {e}')
+        return go.Figure(), go.Figure(), go.Figure(), go.Figure(), go.Figure(), go.Figure(), go.Figure(), go.Figure(), go.Figure()
 
 # Rodando a aplicação
 if __name__ == '__main__':
