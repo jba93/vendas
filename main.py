@@ -63,7 +63,7 @@ class AnalisadorDeVendas:
 
     def analise_vendas_por_dia_da_semana(self):
         ''' Retorna o gráfico de vendas por dia da semana (analisa o impacto do dia) '''
-        df_dia_semana = self.dados.groupby('dia_da_semana')['valor'].sum().index_false()
+        df_dia_semana = self.dados.groupby('dia_da_semana')['valor'].sum().reset_index()
         df_dia_semana['dia_da_semana'] = df_dia_semana['dia_da_semana'].map({
             0:'Segunda-feira', 1:'Terça-feira', 2:'Quarta-feira', 3:'Quinta-feira', 4:'Sexta-feira', 5:'Sábado', 6:'Domingo'
         })
@@ -187,7 +187,7 @@ analise = AnalisadorDeVendas(df)
 app.layout = html.Div([
     html.H1('Dashboards de Análise de Vendas', style={'textAlign': 'center'}),
     html.Div([
-        html.Label('Selecione os produtos:'),
+        html.Label('Selecione os Produtos:'),
         dcc.Dropdown(
             id='produto-dropdown',
             options=[{'label': produto, 'value':produto} for produto in df['produto'].unique()],
