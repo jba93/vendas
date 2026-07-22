@@ -235,20 +235,22 @@ app.layout = html.Div([
 ])
 
 # Callback para atualizar os gráficos conforme os filtros
-Output('grafico-produto', 'figure'),
-Output('grafico-regiao', 'figure'),
-Output('grafico-mensal', 'figure'),
-Output('grafico-diario', 'figure'),
-Output('grafico-dia-da-semana', 'figure'),
-Output('grafico-outliers', 'figure'),
-Output('grafico-distribuicao', 'figure'),
-Output('grafico-media-desvio', 'figure'),
-Output('grafico-acumulado', 'figure'),
-Input('produto-dropdown', 'value'),
-Input('regiao-dropdown', 'value'),
-Input('ano-dropdown', 'value'),
-Input('date-picker-range', 'start_date'),
-Input('date-picker-range', 'end_date')
+@app.callback(
+    Output('grafico-produto', 'figure'),
+    Output('grafico-regiao', 'figure'),
+    Output('grafico-mensal', 'figure'),
+    Output('grafico-diario', 'figure'),
+    Output('grafico-dia-da-semana', 'figure'),
+    Output('grafico-outliers', 'figure'),
+    Output('grafico-distribuicao', 'figure'),
+    Output('grafico-media-desvio', 'figure'),
+    Output('grafico-acumulado', 'figure'),
+    Input('produto-dropdown', 'value'),
+    Input('regiao-dropdown', 'value'),
+    Input('ano-dropdown', 'value'),
+    Input('date-picker-range', 'start_date'),
+    Input('date-picker-range', 'end_date')
+)
 #prevent_initital_call=True
 
 def update_graph(produtos, regioes, ano, start_date, end_date):
@@ -268,7 +270,7 @@ def update_graph(produtos, regioes, ano, start_date, end_date):
         fig_outliers     = analise.analise_outliers()
         fig_acumulado    = analise.vendas_acumuladas()
         fig_media_desvio = go.Figure(data=[
-            go.bar(x=['Média', 'Desvio Padrão'], y=[media, desvio], marker_color=['blue', 'red'])
+            go.Bar(x=['Média', 'Desvio Padrão'], y=[media, desvio], marker_color=['blue', 'red'])
         ], layout=go.Layout(title=f'Média e desvio padrão: Média={media:.2f}, Desvio={desvio:.2f}'))
 
         return fig_produto, fig_regiao, fig_mensal, fig_diario, fig_dia_semana, fig_outliers, fig_distribuicao, fig_media_desvio, fig_acumulado
